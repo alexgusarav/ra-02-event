@@ -1,66 +1,44 @@
-import { useState } from "react";
 import React from "react";
-import Toolbar from "../Toolbar/Toolbar";
-import ProjectList from "../ProjectList/ProjectList";
+import { Toolbar } from "../Toolbar/Toolbar";
+import { ProjectList } from "../ProjectList/ProjectList";
 import data from "../../data/data.json";
 import "./portfolio.css";
 
 const filters = ["All", "Websites", "Flayers", "Business Cards"];
 
 export class Portfolio extends React.Component {
-  render() {
-    const [selected, setSelected] = useState("All");
-    const [images, setImages] = useState(data);
-
-    const handleFilterSet = (clickedFilter) => {
-      setSelected(clickedFilter);
-      setImages(
-        clickedFilter === "All"
-          ? data
-          : data.filter((element) => element.category === clickedFilter)
-      );
+  constructor() {
+    super();
+    this.state = {
+      selected: "All",
+      images: data,
     };
+
+    this.handleFilterSet = this.handleFilterSet.bind(this);
+  }
+
+  handleFilterSet(filter) {
+    this.setState({selected: filter});
+  };
+
+  render() {
+    const {selected, images} = this.state;
+
+    const setImages =
+      selected === "All"
+          ? images
+          : images.filter((element) => element.category === selected);
+
 
     return (
       <div className="portfolio">
         <Toolbar
           filters={filters}
           selected={selected}
-          onSelectFilter={handleFilterSet}
+          onSelectFilter={this.handleFilterSet}
         />
-        <ProjectList projects={images} />
+        <ProjectList projects={setImages} />
       </div>
     );
   };
 };
-
-
-
-// const filters = ["All", "Websites", "Flayers", "Business Cards"];
-
-// const Portfolio = () => {
-//   const [selected, setSelected] = useState("All");
-//   const [images, setImages] = useState(data);
-
-//   const handleFilterSet = (clickedFilter) => {
-//     setSelected(clickedFilter);
-//     setImages(
-//       clickedFilter === "All"
-//         ? data
-//         : data.filter((element) => element.category === clickedFilter)
-//     );
-//   };
-
-//   return (
-//     <div className="portfolio">
-//       <Toolbar
-//         filters={filters}
-//         selected={selected}
-//         onSelectFilter={handleFilterSet}
-//       />
-//       <ProjectList projects={images} />
-//     </div>
-//   );
-// };
-
-// export default Portfolio;
